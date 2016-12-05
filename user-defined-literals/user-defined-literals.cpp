@@ -24,27 +24,20 @@
 
 //using namespace std;
 using time_unit = size_t;
+using ullint = unsigned long long int;
 
 class Time
 {
 protected:
-	time_unit t;
+	ullint h, min, s;
 
 public:
 	Time(ullint h, ullint min, ullint s)
 		: h(h), min(min), s(s) {}
 
-	ullint hour() const {
-		return h;
-	}
-
-	ullint minutes() const {
-		return min;
-	}
-
-	ullint seconds() const {
-		return s;
-	}
+	ullint hour() const noexcept { return h; }
+	ullint minutes() const noexcept { return min; }
+	ullint seconds() const noexcept { return s; }
 
 	std::string str() const {
 		std::ostringstream ss;
@@ -55,17 +48,53 @@ public:
 		ss << std::setw(2) << std::setfill('0') << s;
 		return ss.str();
 	}
+
+
 };
 
 Time operator ""_hour(ullint h) {
 	return Time{h, 0, 0};
 }
 
+Time operator ""_min(ullint m) {
+	return Time{0, m, 0};
+}
+
+Time operator ""_s(ullint s) {
+	return Time{0, 0, s};
+}
+
+Time operator ""_timestamp(const char* format, std::size_t size) {
+	char aux[] = { format[0], format[1] };
+	ullint h = atoi(aux);
+
+	aux[0] = format[3];
+	aux[1] = format[4];
+	ullint m = atoi(aux);
+
+	aux[0] = format[6];
+	aux[1] = format[7];
+	ullint s = atoi(aux);
+
+	return Time{h, m, s};
+}
+
 int main()
 {
 	using namespace std;
 
-	auto time = 1_hour;
-	cout << time.str() << endl;
+	auto t1 = 1_hour;
+	cout << t1.str() << '\n';
+
+	auto t2 = 30_min;
+	cout << t2.str() << '\n';
+
+	auto t3 = 45_s;
+	cout << t3.str() << '\n';
+
+	auto t4 = "12:05:37"_timestamp;
+	cout << t4.str() << '\n';
+
+	return 0;
 }
 
