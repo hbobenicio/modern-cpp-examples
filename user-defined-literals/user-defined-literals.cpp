@@ -22,7 +22,13 @@
  *     const char32_t*, std::size_t
  */
 
-//using namespace std;
+// NOTE: Literals are defined in namespace std::literals, from <string> header.
+// In order to use std::string literals, for example, can do this:
+// using namespace std::literals::string_literals;
+// or
+// using namespace std::literals;
+// for using all of them
+
 using time_unit = size_t;
 using ullint = unsigned long long int;
 
@@ -32,7 +38,7 @@ protected:
 	ullint h, min, s;
 
 public:
-	Time(ullint h, ullint min, ullint s)
+	Time(ullint h, ullint min, ullint s) noexcept
 		: h(h), min(min), s(s) {}
 
 	ullint hour() const noexcept { return h; }
