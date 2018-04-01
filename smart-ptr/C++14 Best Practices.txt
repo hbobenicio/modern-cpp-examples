@@ -1,0 +1,13 @@
+* array_view<T>
+  Use quando quiser percorrer buffers em conjunto com uma variável que representa o tamanho do buffer.
+
+* not_null<T>
+  Use quando quiser garantir o uso de um ponteiro que não aceita valor nulo.
+
+* owner<T>
+  
+* Smart Pointers
+  void foo(T*);             // Não transfere propriedade sobre o objeto. Apenas o uso.
+  void foo(unique_ptr<T>);  // Transfere propriedade única sobre o objeto e o uso.
+  void foo(shared_ptr<T>);  // Compartilha propriedade e uso.
+
