@@ -2,42 +2,98 @@
  * Instalando as dependências:
  * sudo apt install libglfw3-dev
  */
+
 #include <iostream>
-#include <GL/gl.h>
+
+// Do **not** include the OpenGL header yourself, as GLFW does this for you in a platform-independent way
+// If you do need to include such headers, include them **before** the GLFW header and it will detect this
+// #include <GL/gl.h>
+
 #include <GLFW/glfw3.h>
 
-int main() {
+static void logKeyEvent(int key, int scancode, int action, int mods) {
+    printf("KeyEvent{key: %d, scancode: %d, action: %d, mods: %d}\n", key, scancode, action, mods);
+}
 
-    /* Initialize the library */
+/**
+ * Callback called on GLFW Error Events.
+ */
+static void onGLFWError(int error, const char* description) {
+    std::cerr << "GLFW Error: [" << error << "] " << description << "\n";
+}
+
+/**
+ * Callback called for GLFW Key Events.
+ */
+static void onGLFWKey(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    logKeyEvent(key, scancode, action, mods);
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
+}
+
+int main() {
+    // Callback functions must be set, so GLFW knows to call them.
+    // The function to set the error callback is one of the few GLFW functions that may be called before
+    // initialization, which lets you be notified of errors both during and after initialization.
+    glfwSetErrorCallback(onGLFWError);
+
+    // Initialize GLFW
     if (!glfwInit()) {
-        std::cerr << "Error while initing glfw\n";
+        std::cerr << "Error while initializing GLFW\n";
         return EXIT_FAILURE;
     }
 
-    /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow* window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
+    // By default, the OpenGL context GLFW creates may have any version.
+    // You can require a minimum OpenGL version by setting the
+    // GLFW_CONTEXT_VERSION_MAJOR and GLFW_CONTEXT_VERSION_MINOR hints before creation.
+    // If the required minimum version is not supported on the machine, context (and window) creation fails.
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+    // Create a windowed mode window and its OpenGL context
+    GLFWwindow* window = glfwCreateWindow(640, 480, "hello-world", nullptr, nullptr);
+    if (!window) {
         std::cerr << "Error while creating the glfw window\n";
         glfwTerminate();
         return EXIT_FAILURE;
     }
 
-    /* Make the window's context current */
+    // Registers the key event callback
+    glfwSetKeyCallback(window, onGLFWKey);
+
+    // Make the window's context current
     glfwMakeContextCurrent(window);
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
+    double previousTime = glfwGetTime();
+    int frameCount = 0;
+
+    // Loop until the user closes the window
+    while (!glfwWindowShouldClose(window)) {
+        // Measure speed
+        double currentTime = glfwGetTime();
+        frameCount++;
+
+        // If a second has passed.
+        if (currentTime - previousTime >= 1.0) {
+            // Display the frame count here any way you want.
+            std::cout << "FPS: " << frameCount << "fps\n";
+
+            frameCount = 0;
+            previousTime = currentTime;
+        }
+
+        // Render here
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
+        // Swap front and back buffers
         glfwSwapBuffers(window);
 
-        /* Poll for and process events */
+        // Poll for and process events
         glfwPollEvents();
     }
+
     // ensures the correct destruction of the window and consequently the context
     glfwTerminate();
 }
