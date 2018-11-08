@@ -6,6 +6,9 @@ find_package(OpenGL REQUIRED)
 # find_package(glfw3 3.2 REQUIRED)
 find_package(glfw3 REQUIRED)
 
+message(OPENGL_LIBRARY " = " ${OPENGL_LIBRARY})
+message(GLFW3_LIBRARY " = " ${GLFW3_LIBRARY})
+
 set(CMAKE_CXX_STANDARD 14)
 
 # (use -DCMAKE_BUILD_TYPE=Release|Debug to change the build type)
@@ -28,4 +31,5 @@ add_executable(hello-world
 target_link_libraries(hello-world
     ${OPENGL_LIBRARY}
     ${GLFW3_LIBRARY}
+    glfw
 )

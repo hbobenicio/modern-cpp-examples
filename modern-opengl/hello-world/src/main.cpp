@@ -4,12 +4,41 @@
  */
 
 #include <iostream>
+#include <functional>
 
 // Do **not** include the OpenGL header yourself, as GLFW does this for you in a platform-independent way
 // If you do need to include such headers, include them **before** the GLFW header and it will detect this
 // #include <GL/gl.h>
 
 #include <GLFW/glfw3.h>
+
+namespace Utils {
+    class Timer {
+    private:
+        double previousTime = glfwGetTime();
+        int frameCount = 0;
+        float limit;
+
+    public:
+        Timer(float limit) : limit(limit)
+        {
+        }
+
+        void tick(const std::function<void(int)>& callback) {
+            // Measure speed
+            double currentTime = glfwGetTime();
+            this->frameCount++;
+
+            // If a second has passed.
+            if (currentTime - previousTime >= this->limit) {
+                callback(this->frameCount);
+
+                frameCount = 0;
+                previousTime = currentTime;
+            }
+        }
+    };
+}
 
 static void logKeyEvent(int key, int scancode, int action, int mods) {
     printf("KeyEvent{key: %d, scancode: %d, action: %d, mods: %d}\n", key, scancode, action, mods);
@@ -66,31 +95,20 @@ int main() {
     // Make the window's context current
     glfwMakeContextCurrent(window);
 
-    double previousTime = glfwGetTime();
-    int frameCount = 0;
+    Utils::Timer fpsTimer{1.0};
 
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
-        // Measure speed
-        double currentTime = glfwGetTime();
-        frameCount++;
-
-        // If a second has passed.
-        if (currentTime - previousTime >= 1.0) {
+        fpsTimer.tick([](int fps){
             // Display the frame count here any way you want.
-            std::cout << "FPS: " << frameCount << "fps\n";
-
-            frameCount = 0;
-            previousTime = currentTime;
-        }
+            std::cout << "FPS: " << fps << "\n";
+        });
 
         // Render here
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Swap front and back buffers
+        // Swap buffers and poll for and process events
         glfwSwapBuffers(window);
-
-        // Poll for and process events
         glfwPollEvents();
     }
 
