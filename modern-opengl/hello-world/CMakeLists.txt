@@ -16,20 +16,22 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -s")
 
-file(GLOB HELLO_WORLD_SOURCES "src/*.cpp")
-
 include_directories(
     "${OPENGL_INCLUDE_DIR}"
-    "include/"
-    "src/"
+    "${CMAKE_SOURCE_DIR}/common/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/"
 )
 
 add_executable(hello-world
-    "${HELLO_WORLD_SOURCES}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
 )
+
+# add_dependencies(hello-world commmon)
 
 target_link_libraries(hello-world
     ${OPENGL_LIBRARY}
     ${GLFW3_LIBRARY}
     glfw
+    common
 )

@@ -4,41 +4,13 @@
  */
 
 #include <iostream>
-#include <functional>
+#include <modern-opengl/common/Timer.h>
 
 // Do **not** include the OpenGL header yourself, as GLFW does this for you in a platform-independent way
 // If you do need to include such headers, include them **before** the GLFW header and it will detect this
 // #include <GL/gl.h>
 
 #include <GLFW/glfw3.h>
-
-namespace Utils {
-    class Timer {
-    private:
-        double previousTime = glfwGetTime();
-        int frameCount = 0;
-        float limit;
-
-    public:
-        Timer(float limit) : limit(limit)
-        {
-        }
-
-        void tick(const std::function<void(int)>& callback) {
-            // Measure speed
-            double currentTime = glfwGetTime();
-            this->frameCount++;
-
-            // If a second has passed.
-            if (currentTime - previousTime >= this->limit) {
-                callback(this->frameCount);
-
-                frameCount = 0;
-                previousTime = currentTime;
-            }
-        }
-    };
-}
 
 static void logKeyEvent(int key, int scancode, int action, int mods) {
     printf("KeyEvent{key: %d, scancode: %d, action: %d, mods: %d}\n", key, scancode, action, mods);
@@ -78,8 +50,8 @@ int main() {
     // You can require a minimum OpenGL version by setting the
     // GLFW_CONTEXT_VERSION_MAJOR and GLFW_CONTEXT_VERSION_MINOR hints before creation.
     // If the required minimum version is not supported on the machine, context (and window) creation fails.
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
     // Create a windowed mode window and its OpenGL context
     GLFWwindow* window = glfwCreateWindow(640, 480, "hello-world", nullptr, nullptr);
@@ -95,7 +67,7 @@ int main() {
     // Make the window's context current
     glfwMakeContextCurrent(window);
 
-    Utils::Timer fpsTimer{1.0};
+    ModernOpenGL::Common::Timer fpsTimer{1.0};
 
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
