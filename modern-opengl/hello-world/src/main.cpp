@@ -1,26 +1,30 @@
 /**
- * Instalando as dependências:
- * sudo apt install libglfw3-dev
+ * modern-opengl example
+ *
+ * # Dependencies
+ *
+ * $ sudo apt install libglfw3-dev
  */
-
 #include <iostream>
-#include <modern-opengl/common/Timer.h>
 
-// Do **not** include the OpenGL header yourself, as GLFW does this for you in a platform-independent way
-// If you do need to include such headers, include them **before** the GLFW header and it will detect this
-// #include <GL/gl.h>
-
+// TODO Add glad!
+// #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-static void logKeyEvent(int key, int scancode, int action, int mods) {
-    printf("KeyEvent{key: %d, scancode: %d, action: %d, mods: %d}\n", key, scancode, action, mods);
-}
+#include <modern-opengl/common/Timer.h>
 
 /**
  * Callback called on GLFW Error Events.
  */
 static void onGLFWError(int error, const char* description) {
     std::cerr << "GLFW Error: [" << error << "] " << description << "\n";
+}
+
+/**
+ * Logs the key event to the stdio.
+ */
+static void logKeyEvent(int key, int scancode, int action, int mods) {
+    printf("KeyEvent{key: %d, scancode: %d, action: %d, mods: %d}\n", key, scancode, action, mods);
 }
 
 /**
@@ -33,6 +37,22 @@ static void onGLFWKey(GLFWwindow* window, int key, int scancode, int action, int
         glfwSetWindowShouldClose(window, true);
     }
 }
+
+static const char* vertexShaderCode =
+"uniform mat4 MVP;\n"
+"attribute vec3 vCol;\n"
+"attribute vec2 vPos;\n"
+"varying vec3 color;\n"
+"void main() {\n"
+"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+"    color = vCol;\n"
+"}\n";
+
+static const char* fragmentShaderCode =
+"varying vec3 color;\n"
+"void main() {\n"
+"    gl_FragColor = vec4(color, 1.0);\n"
+"}\n";
 
 int main() {
     // Callback functions must be set, so GLFW knows to call them.
@@ -52,6 +72,8 @@ int main() {
     // If the required minimum version is not supported on the machine, context (and window) creation fails.
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     // Create a windowed mode window and its OpenGL context
     GLFWwindow* window = glfwCreateWindow(640, 480, "hello-world", nullptr, nullptr);
@@ -67,15 +89,10 @@ int main() {
     // Make the window's context current
     glfwMakeContextCurrent(window);
 
-    ModernOpenGL::Common::Timer fpsTimer{1.0};
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
-        fpsTimer.tick([](int fps){
-            // Display the frame count here any way you want.
-            std::cout << "FPS: " << fps << "\n";
-        });
-
         // Render here
         glClear(GL_COLOR_BUFFER_BIT);
 
