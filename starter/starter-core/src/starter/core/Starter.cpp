@@ -4,8 +4,8 @@
 
 namespace starter { namespace core {
 
-void sayHello() {
-  std::cout << "Hello, World!\n";
-}
+  void sayHello() {
+    std::cout << "[starter::core::sayHello] Hello, World!\n";
+  }
 
 }}

@@ -9,12 +9,10 @@ add_library(starter-core-shared SHARED
     "src/starter/core/Starter.cpp"
 )
 
-# TODO Isso pode ficar no CMakeList.txt raiz do projeto?
+# TODO Can this be specified at roots CMakeLists.txt?
+# TODO Get rid of duplication
 target_compile_features(starter-core PRIVATE cxx_std_14)
 target_compile_features(starter-core-shared PRIVATE cxx_std_14)
-
-message("[starter-core] CMAKE_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
-message("[starter-core] PROJECT_SOURCE_DIR = ${PROJECT_SOURCE_DIR}")
 
 target_include_directories(starter-core PRIVATE
     "${PROJECT_SOURCE_DIR}/include"
