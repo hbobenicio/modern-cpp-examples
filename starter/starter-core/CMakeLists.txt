@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 project(starter-core)
 
 add_library(starter-core STATIC
-    "src/starter/core/Starter.cpp"
+    "src/starter/core/fs/Paths.cpp"
 )
 
 add_library(starter-core-shared SHARED
-    "src/starter/core/Starter.cpp"
+    "src/starter/core/fs/Paths.cpp"
 )
 
 # TODO Can this be specified at roots CMakeLists.txt?
