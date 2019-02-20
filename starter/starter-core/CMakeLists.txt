@@ -3,10 +3,12 @@ project(starter-core)
 
 add_library(${PROJECT_NAME} STATIC
     "src/starter/core/fs/Paths.cpp"
+    "src/starter/core/AppEntry.cpp"
 )
 
 add_library(${PROJECT_NAME}-shared SHARED
     "src/starter/core/fs/Paths.cpp"
+    "src/starter/core/AppEntry.cpp"
 )
 
 # TODO Can this be specified at roots CMakeLists.txt?

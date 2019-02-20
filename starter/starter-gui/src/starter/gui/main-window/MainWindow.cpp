@@ -4,6 +4,8 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include <starter/core/AppEntry.h>
+
 namespace starter { namespace gui { namespace mainwindow {
 
     static constexpr const char* LOG_NAME = "starter::gui::mainwindow::MainWindow";
@@ -43,13 +45,15 @@ namespace starter { namespace gui { namespace mainwindow {
     }
 
     void MainWindow::addApps() {
-        std::vector<std::string> apps;
-        apps.emplace_back("Firefox Quantum");
-        apps.emplace_back("Firefox Serpro");
-        apps.emplace_back("Gnome Terminal");
+        using starter::core::AppEntry;
+
+        std::vector<AppEntry> apps = AppEntry::mockEntries();
 
         for (const auto app: apps) {
-            LOG->warn("TODO: add {} in the appListBox", app);
+            LOG->warn("TODO: add {} in the appListBox", app.name);
+
+            auto row = Gtk::manage(new Gtk::ListBoxRow());
+            this->appListBox->append(*row);
         }
     }
 

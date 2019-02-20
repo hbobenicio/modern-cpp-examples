@@ -9,6 +9,7 @@ TODO description
 - C++ compiler with c++14 support (gcc, clang)
 - cmake
 - git (for using vcpkg)
+- libgtkmm-3.0-dev (gtkmm vcpkg package is not trivial to build atm)
 
 > TODO Add Ubuntu commands to install them
 
