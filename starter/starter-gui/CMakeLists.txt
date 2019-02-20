@@ -32,6 +32,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${GTKMM_LIBRARIES}
+    spdlog::spdlog
     starter-core
 )
 

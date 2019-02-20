@@ -1,7 +1,17 @@
 #include <iostream>
+
 #include <gtkmm.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+
 #include <starter/core/fs/Paths.h>
 #include <starter/gui/main-window/MainWindow.h>
+
+static constexpr const char* LOG_NAME = "starter::gui::main";
+
+// TODO How to configure errors to stderr without creating another logger?
+// https://github.com/gabime/spdlog/issues/345
+static const auto LOG = spdlog::stdout_color_mt(LOG_NAME);
 
 static void init();
 
@@ -17,25 +27,22 @@ int main(int argc, char* argv[]) {
     builder->add_from_file("main-window/MainWindow.glade");
 
   } catch (const Glib::FileError& err) {
-    std::cerr << "não foi possível criar builder para MainWindow.glade: ";
-    std::cerr << "Glib::FileError: " << err.what() << '\n';
+    LOG->error("could not create builder for MainWindow.glade: Glib::FileError: {}", err.what().c_str());
     return EXIT_FAILURE;
 
   } catch (const Glib::MarkupError& err) {
-    std::cerr << "não foi possível criar builder para MainWindow.glade: ";
-    std::cerr << "Glib::MarkupError: " << err.what() << '\n';
+    LOG->error("could not create builder for MainWindow.glade: Glib::MarkupError: {}", err.what().c_str());
     return EXIT_FAILURE;
 
   } catch (const Gtk::BuilderError& err) {
-    std::cerr << "não foi possível criar builder para MainWindow.glade: ";
-    std::cerr << "Gtk::BuilderError: " << err.what() << '\n';
+    LOG->error("could not create builder for MainWindow.glade: Gtk::BuilderError: {}", err.what().c_str());
     return EXIT_FAILURE;
   }
 
   starter::gui::mainwindow::MainWindow* mainWindow = nullptr;
   builder->get_widget_derived("mainWindow", mainWindow);
   if (!mainWindow) {
-    std::cerr << "não foi possível obter widget 'mainWindow'\n";
+    LOG->error("could not get 'mainWindow' widget");
     return EXIT_FAILURE;
   }
 
@@ -49,11 +56,12 @@ int main(int argc, char* argv[]) {
 static void init() {
   using starter::core::fs::sep;
 
+  LOG->info("app is initializing...");
+  
   std::string starterDir = Glib::get_home_dir() + sep + ".starter";
 
-  std::cout << "[starter::gui::main::init] Assegurando existência do diretório .starter...\n";
+  LOG->info("creating folder '{}' ...", starterDir);
   if (g_mkdir_with_parents(starterDir.c_str(), 0700)) {
-    std::cerr << "[starter::gui::main::init] não foi possível criar diretório ";
-    std::cerr << starterDir << " : " << g_strerror(errno);
+    LOG->error("could not create folder '{}': {}", starterDir, g_strerror(errno));
   }
 }
