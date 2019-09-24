@@ -1,21 +1,44 @@
-cmake_minimum_required(VERSION 3.5)
-project(calculator-core)
+cmake_minimum_required(VERSION 3.15)
 
-file(GLOB LIBCALCULATOR_CORE_PUBLIC_HEADERS "include/calculator/core/*.h")
-file(GLOB LIBCALCULATOR_CORE_SOURCES "src/calculator/core/*.cpp")
-
-include_directories(
-    "include"
+project(calculator-core
+    VERSION 0.1.0
+    DESCRIPTION "Calculator Core is the main library of the calculator"
+    LANGUAGES CXX
 )
 
-add_library(calculator_core STATIC ${LIBCALCULATOR_CORE_SOURCES})
-add_library(calculator_core_shared SHARED ${LIBCALCULATOR_CORE_SOURCES}) # TODO rename it?
+add_library("${PROJECT_NAME}" STATIC
+    "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/Calculator.cpp"
+)
+add_library("${PROJECT_NAME}-shared" SHARED
+    "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/Calculator.cpp"
+)
 
-set_target_properties(calculator_core PROPERTIES PUBLIC_HEADER "${LIBCALCULATOR_CORE_PUBLIC_HEADERS}")
+target_compile_features("${PROJECT_NAME}" PUBLIC cxx_std_17)
+target_compile_features("${PROJECT_NAME}-shared" PUBLIC cxx_std_17)
 
-# /usr/lib ?
+target_include_directories("${PROJECT_NAME}"
+    PUBLIC
+        "${PROJECT_SOURCE_DIR}/include"
+    PRIVATE
+        "${PROJECT_SOURCE_DIR}/src"
+)
+
+target_include_directories("${PROJECT_NAME}-shared"
+    PUBLIC
+        "${PROJECT_SOURCE_DIR}/include"
+    PRIVATE
+        "${PROJECT_SOURCE_DIR}/src"
+)
+
+set_property(TARGET "${PROJECT_NAME}" "${PROJECT_NAME}-shared"
+    PROPERTY PUBLIC_HEADER
+        "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"
+)
+
 install(
-    TARGETS calculator_core calculator_core_shared
+    TARGETS "${PROJECT_NAME}" "${PROJECT_NAME}-shared"
     ARCHIVE DESTINATION /usr/local/lib/calculator
     LIBRARY DESTINATION /usr/local/lib/calculator
     PUBLIC_HEADER DESTINATION /usr/local/include/calculator/core

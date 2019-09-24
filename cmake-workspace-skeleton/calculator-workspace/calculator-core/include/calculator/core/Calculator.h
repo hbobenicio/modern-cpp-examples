@@ -1,20 +1,20 @@
-#ifndef CALCULATOR_H
-#define CALCULATOR_H
+#ifndef CALCULATOR_CORE_CALCULATOR_H
+#define CALCULATOR_CORE_CALCULATOR_H
 
 namespace calculator {
 namespace core {
 
 class Calculator {
-private:
-  double _total = 0.0;
+protected:
+    double total = 0.0;
 
 public:
-  void add(double x) noexcept;
-  void sub(double x) noexcept;
-  void mult(double x) noexcept;
-  void div(double x);
+    void add(double x) noexcept;
+    void sub(double x) noexcept;
+    void mult(double x) noexcept;
+    void div(double x);
 
-  double getTotal() const noexcept;
+    double getTotal() const noexcept;
 };
 
 } // core
