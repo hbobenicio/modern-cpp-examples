@@ -6,14 +6,28 @@ project(calculator-core
     LANGUAGES CXX
 )
 
-add_library("${PROJECT_NAME}" STATIC
+set(CALCULATOR_CORE_SOURCES
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/Parser.h"
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/Parser.cpp"
     "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"
     "${PROJECT_SOURCE_DIR}/src/calculator/core/Calculator.cpp"
 )
-add_library("${PROJECT_NAME}-shared" SHARED
-    "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"
-    "${PROJECT_SOURCE_DIR}/src/calculator/core/Calculator.cpp"
-)
+
+add_library("${PROJECT_NAME}"        STATIC "${CALCULATOR_CORE_SOURCES}")
+add_library("${PROJECT_NAME}-shared" SHARED "${CALCULATOR_CORE_SOURCES}")
+
+# add_library("${PROJECT_NAME}" STATIC
+#     "${PROJECT_SOURCE_DIR}/src/calculator/core/ShuntingYard.h"
+#     "${PROJECT_SOURCE_DIR}/src/calculator/core/ShuntingYard.cpp"
+#     "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"
+#     "${PROJECT_SOURCE_DIR}/src/calculator/core/Calculator.cpp"
+# )
+# add_library("${PROJECT_NAME}-shared" SHARED
+#     "${PROJECT_SOURCE_DIR}/src/calculator/core/ShuntingYard.h"
+#     "${PROJECT_SOURCE_DIR}/src/calculator/core/ShuntingYard.cpp"
+#     "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"
+#     "${PROJECT_SOURCE_DIR}/src/calculator/core/Calculator.cpp"
+# )
 
 target_compile_features("${PROJECT_NAME}" PUBLIC cxx_std_17)
 target_compile_features("${PROJECT_NAME}-shared" PUBLIC cxx_std_17)

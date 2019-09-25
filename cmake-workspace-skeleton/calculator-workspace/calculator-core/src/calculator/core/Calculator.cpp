@@ -1,7 +1,22 @@
 #include <calculator/core/Calculator.h>
+#include <iostream>
+
+#include "parser/Parser.h"
 
 namespace calculator {
 namespace core {
+
+void Calculator::parse(const std::string& expression) {
+    std::string infix_expression {expression};
+    std::queue<char> rpn = parser::shunting_yard(infix_expression);
+    // while (!rpn.empty()) {
+    //     const char& c = rpn.front();
+    //     std::cout << c;
+    //     rpn.pop();
+    // }
+    // std::cout << '\n';
+    parser::rpn_eval(rpn);
+}
 
 void Calculator::add(double x) noexcept {
     this->total += x;
