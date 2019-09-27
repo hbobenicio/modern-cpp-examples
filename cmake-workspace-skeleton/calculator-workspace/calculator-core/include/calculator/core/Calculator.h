@@ -3,25 +3,23 @@
 
 #include <string>
 
-namespace calculator {
-namespace core {
+namespace calculator::core {
 
-class Calculator {
-protected:
-    double total = 0.0;
+    class Calculator {
+    protected:
+        double total = 0.0;
 
-public:
-    void parse(const std::string& expression);
+    public:
+        void parse(const std::string& expression);
 
-    void add(double x) noexcept;
-    void sub(double x) noexcept;
-    void mult(double x) noexcept;
-    void div(double x);
+        void add(double x) noexcept;
+        void sub(double x) noexcept;
+        void mult(double x) noexcept;
+        void div(double x);
 
-    double getTotal() const noexcept;
-};
+        double getTotal() const noexcept;
+    };
 
-} // core
-} // calculator
+}
 
 #endif

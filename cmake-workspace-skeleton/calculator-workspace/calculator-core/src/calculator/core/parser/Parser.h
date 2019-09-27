@@ -4,15 +4,11 @@
 #include <string>
 #include <queue>
 
-namespace calculator {
-namespace core {
-namespace parser {
+namespace calculator::core::parser {
 
-std::queue<char> shunting_yard(const std::string& input);
-void rpn_eval(std::queue<char>& input);
+    std::queue<char> shunting_yard(const std::string& input);
 
-} // parser
-} // core
-} // calculator
+    void rpn_eval(std::queue<char>& input);
+}
 
 #endif
