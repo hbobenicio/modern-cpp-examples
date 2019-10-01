@@ -12,11 +12,6 @@ namespace calculator::core {
     public:
         void parse(const std::string& expression);
 
-        void add(double x) noexcept;
-        void sub(double x) noexcept;
-        void mult(double x) noexcept;
-        void div(double x);
-
         double getTotal() const noexcept;
     };
 

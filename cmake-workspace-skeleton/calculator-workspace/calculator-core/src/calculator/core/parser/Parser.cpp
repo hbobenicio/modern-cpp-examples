@@ -8,7 +8,7 @@
 
 namespace calculator::core::parser {
 
-    inline static bool is_operator(char c) {
+    inline static bool is_operator(char c) noexcept {
         return (c == '+' || c == '-' || c == '*' || c == '/');
     }
 
@@ -59,7 +59,7 @@ namespace calculator::core::parser {
         return output;
     }
 
-    void rpn_eval(std::queue<char>& input) {
+    void rpn_eval(std::queue<char>& input) noexcept(false) {
         std::stack<char> result;
 
         while(!input.empty()) {
