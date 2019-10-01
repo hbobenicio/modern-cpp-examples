@@ -6,14 +6,7 @@
 namespace calculator::core {
 
     void Calculator::parse(const std::string& expression) {
-        std::string infix_expression {expression};
-        std::queue<char> rpn = parser::shunting_yard(infix_expression);
-        // while (!rpn.empty()) {
-        //     const char& c = rpn.front();
-        //     std::cout << c;
-        //     rpn.pop();
-        // }
-        // std::cout << '\n';
+        std::queue<char> rpn = parser::shunting_yard(expression);
         parser::rpn_eval(rpn);
     }
 
