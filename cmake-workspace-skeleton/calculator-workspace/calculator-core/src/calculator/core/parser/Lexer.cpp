@@ -14,7 +14,7 @@ namespace calculator::core::parser {
                 std::stringstream num;
                 num << c;
 
-                auto next = it + 1;
+                auto next = std::next(it);
                 while (next != std::end(input) && isdigit(*next)) {
                     num << *next;
                     next = next + 1;
