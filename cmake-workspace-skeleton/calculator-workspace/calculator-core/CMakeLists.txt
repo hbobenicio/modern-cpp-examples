@@ -7,6 +7,10 @@ project(calculator-core
 )
 
 set(CALCULATOR_CORE_SOURCES
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/token/Token.h"
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/token/Token.cpp"
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/Lexer.h"
+    "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/Lexer.cpp"
     "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/Parser.h"
     "${PROJECT_SOURCE_DIR}/src/calculator/core/parser/Parser.cpp"
     "${PROJECT_SOURCE_DIR}/include/calculator/core/Calculator.h"

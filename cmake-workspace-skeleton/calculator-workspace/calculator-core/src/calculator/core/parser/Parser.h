@@ -3,12 +3,13 @@
 
 #include <string>
 #include <queue>
+#include "Lexer.h"
 
 namespace calculator::core::parser {
 
-    std::queue<char> shunting_yard(const std::string& input);
+    token::Deque shunting_yard(const token::Deque& input);
 
-    void rpn_eval(std::queue<char>& input) noexcept(false);
+    void rpn_eval(const token::Deque& input) noexcept(false);
 }
 
 #endif

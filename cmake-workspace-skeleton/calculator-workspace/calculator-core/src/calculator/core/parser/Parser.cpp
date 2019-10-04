@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include <cstring>
 #include <stack>
 #include <queue>
 #include <cctype>
@@ -12,7 +13,29 @@ namespace calculator::core::parser {
         return (c == '+' || c == '-' || c == '*' || c == '/');
     }
 
-    std::queue<char> shunting_yard(const std::string& input) {
+    token::Deque queue_copy(const token::Deque& input) {
+        token::Deque output;
+
+        for (const auto& x: input) {
+
+            if (strcmp(x->type(), token::NUM) == 0) {
+                token::Num* num = dynamic_cast<token::Num*>(x.get());
+                output.push_back(std::make_unique<token::Num>(num->value));
+
+            } else if (strcmp(x->type(), token::OPERATOR) == 0) {
+                token::Operator* op = dynamic_cast<token::Operator*>(x.get());
+                output.push_back(std::make_unique<token::Operator>(op->value));
+
+            } else {
+                std::cerr << "unsupported token: " << x->type() << '\n';
+                throw std::logic_error { "unsupported token" };
+            }
+        }
+
+        return output;
+    }
+
+    token::Deque shunting_yard(const token::Deque& input_expression) {
         static const std::unordered_map<char, short> precedence {
             { '+', 2 },
             { '-', 2 },
@@ -20,37 +43,46 @@ namespace calculator::core::parser {
             { '/', 3 },
         };
 
+        token::Deque input = queue_copy(input_expression);
+
         std::stack<char> operators;
-        std::queue<char> output;
+        token::Deque output;
 
-        for (const char& c: input) {
-            if (isspace(c)) {
-                continue;
-            }
+        while (!input.empty()) {
+            auto& token = input.front();
+            // std::cerr << "DBG> " << token->type() << '\n';
 
-            // TODO improve this to support full numbers, not just digits
-            if (isdigit(c)) {
-                output.push(c);
-                continue;
-            }
-
-            if (is_operator(c)) {
-                if (!operators.empty()) {
-                    char top = operators.top();
-                    while (precedence.at(top) >= precedence.at(c) && !operators.empty()) {
-                        top = operators.top();
-                        output.push(top);
-                        operators.pop();
-                    }
+            if (strcmp(token->type(), token::NUM) == 0) {
+                token::Num* num = dynamic_cast<token::Num*>(token.get());
+                if (num) {
+                    token.release();
+                    output.emplace_back(num);
                 }
-                operators.push(c);
-                continue;
+            } else if (strcmp(token->type(), token::OPERATOR) == 0) {
+                token::Operator* op = dynamic_cast<token::Operator*>(token.get());
+                if (op) {
+                    token.release();
+                    if (!operators.empty()) {
+                        char top = operators.top();
+                        while (precedence.at(top) >= precedence.at(op->value) && !operators.empty()) {
+                            top = operators.top();
+                            output.push_back(std::make_unique<token::Operator>(top));
+                            operators.pop();
+                        }
+                    }
+                    operators.push(op->value);
+                }
+            } else {
+                std::cerr << "unsupported token: " << token->type() << '\n';
+                throw std::logic_error { "unsupported token" };
             }
+
+            input.pop_front();
         }
 
         while (!operators.empty()) {
             const char& c = operators.top();
-            output.push(c);
+            output.push_back(std::make_unique<token::Operator>(c));
             operators.pop();
         }
 
@@ -59,54 +91,62 @@ namespace calculator::core::parser {
         return output;
     }
 
-    void rpn_eval(std::queue<char>& input) noexcept(false) {
-        std::stack<char> result;
+    void rpn_eval(const token::Deque& input_expression) noexcept(false) {
+
+        token::Deque input = queue_copy(input_expression);
+        std::stack<double> result;
 
         while(!input.empty()) {
-            const char& c = input.front();
-            input.pop();
+            auto& token = input.front();
 
-            if (isdigit(c)) {
-                result.push(c);
-                continue;
-            }
-
-            if (is_operator(c)) {
-                const char& op1 = result.top();
-                int x = op1 - '0';
-                result.pop();
-
-                const char& op2 = result.top();
-                int y = op2 - '0';
-                result.pop();
-
-                switch (c) {
-                    case '+': {
-                        int res = x + y;
-                        result.push(res + '0');
-                        break;
-
-                    }
-                    case '-': {
-                        int res = x - y;
-                        result.push(res + '0');
-                        break;
-                    }
-                    case '*': {
-                        int res = x * y;
-                        result.push(res + '0');
-                        break;
-                    }
-                    case '/': {
-                        int res = x / y;
-                        result.push(res + '0');
-                        break;
-                    }
-                    default:
-                        throw std::logic_error{ "rpn expression has an unsupported operator" };
-                        break;
+            if (strcmp(token->type(), token::NUM) == 0) {
+                token::Num* num = dynamic_cast<token::Num*>(token.get());
+                if (num) {
+                    token.release();
+                    result.push(num->value);
                 }
+            } else if (strcmp(token->type(), token::OPERATOR) == 0) {
+                token::Operator* op = dynamic_cast<token::Operator*>(token.get());
+                if (op) {
+                    double y = result.top();
+                    result.pop();
+
+                    double x = result.top();
+                    result.pop();
+
+                    switch (op->value) {
+                        case '+': {
+                            double res = x + y;
+                            result.push(res);
+                            break;
+
+                        }
+                        case '-': {
+                            double res = x - y;
+                            result.push(res);
+                            break;
+                        }
+                        case '*': {
+                            double res = x * y;
+                            result.push(res);
+                            break;
+                        }
+                        case '/': {
+                            double res = x / y;
+                            result.push(res);
+                            break;
+                        }
+                        default:
+                            throw std::logic_error{ "rpn expression has an unsupported operator" };
+                            break;
+                    }
+                }
+            } else {
+                std::cerr << "unsupported token: " << token->type() << '\n';
+                throw std::logic_error { "unsupported token" };
             }
+
+            input.pop_front();
         }
 
         if (result.size() != 1) {

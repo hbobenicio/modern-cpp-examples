@@ -7,6 +7,10 @@ int main(int argc, char* argv[]) {
 
     std::string input;
     while (std::getline(std::cin, input)) {
+        if (input.length() == 0) {
+            std::cerr << "[WARN] ignorando entrada vazia\n";
+            continue;
+        }
         calc.parse(input);
     }
 }
