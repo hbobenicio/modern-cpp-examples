@@ -50,7 +50,6 @@ namespace calculator::core::parser {
 
         while (!input.empty()) {
             auto& token = input.front();
-            // std::cerr << "DBG> " << token->type() << '\n';
 
             if (strcmp(token->type(), token::NUM) == 0) {
                 token::Num* num = dynamic_cast<token::Num*>(token.get());
@@ -91,7 +90,7 @@ namespace calculator::core::parser {
         return output;
     }
 
-    void rpn_eval(const token::Deque& input_expression) noexcept(false) {
+    double rpn_eval(const token::Deque& input_expression) noexcept(false) {
 
         token::Deque input = queue_copy(input_expression);
         std::stack<double> result;
@@ -153,7 +152,7 @@ namespace calculator::core::parser {
             throw std::logic_error{ "rpn stack has not only one value after evaluation" };
         }
 
-        std::cout << result.top() << '\n';
+        return result.top();
     }
 
 }

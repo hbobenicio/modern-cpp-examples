@@ -9,7 +9,7 @@ namespace calculator::core::parser {
 
     token::Deque shunting_yard(const token::Deque& input);
 
-    void rpn_eval(const token::Deque& input) noexcept(false);
+    double rpn_eval(const token::Deque& input) noexcept(false);
 }
 
 #endif

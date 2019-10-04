@@ -13,7 +13,7 @@ namespace calculator::core {
 
         parser::token::Deque rpn = parser::shunting_yard(tokens);
 
-        parser::rpn_eval(rpn);
+        this->total = parser::rpn_eval(rpn);
 
         // TODO add the response to the total value
     }

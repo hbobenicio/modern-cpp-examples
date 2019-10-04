@@ -11,6 +11,8 @@ int main(int argc, char* argv[]) {
             std::cerr << "[WARN] ignorando entrada vazia\n";
             continue;
         }
+
         calc.parse(input);
+        std::cout << calc.getTotal() << '\n';
     }
 }
