@@ -22,9 +22,9 @@ A simple project that tries to be a simple skeleton for well organized and moder
 ## Build
 
 ```
-# TODO How to install all dependencies from the project at once?
 CC=clang CXX=clang++ ./vcpkg/bootstrap-vcpkg.sh
 
+# TODO How to install all dependencies from the project at once?
 # TODO Which version?
 ./vcpkg/vcpkg install spdlog 
 
