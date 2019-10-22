@@ -1,6 +1,6 @@
 # starter
 
-TODO description
+A simple project that tries to be a simple skeleton for well organized and modern C++ applications (with dependency management and modern cmake).
 
 ## Setup
 
@@ -22,14 +22,20 @@ TODO description
 ## Build
 
 ```
+# TODO How to install all dependencies from the project at once?
+CC=clang CXX=clang++ ./vcpkg/bootstrap-vcpkg.sh
+
+# TODO Which version?
+./vcpkg/vcpkg install spdlog 
+
 mkdir build
 cd build
 
 # Debug
-# cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug
+# CC=clang CXX=clang++ cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug
 
 # Release
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+CC=clang CXX=clang++ cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
 
 make
 ```
