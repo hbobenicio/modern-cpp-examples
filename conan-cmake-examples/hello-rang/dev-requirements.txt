@@ -21,7 +21,7 @@ packaging==19.1
 patch==1.16
 pkg-resources==0.0.0
 pluginbase==0.7
-Pygments==2.4.2
+Pygments==2.7.4
 PyJWT==1.7.1
 pylint==2.3.1
 pyparsing==2.4.2
