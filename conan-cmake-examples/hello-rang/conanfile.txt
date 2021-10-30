@@ -1,5 +1,5 @@
 [requires]
-rang/3.1.0@rang/stable
+rang/3.2
 
 [generators]
 cmake
