@@ -1,0 +1,112 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 30
+    },
+    "configurePresets": [
+        {
+            "$comment": "NOTE: static linking (-static) does not play well with sanitizer builds",
+            "name": "clang-sanitizer",
+            "displayName": "Clang: Sanitizer Configure Preset",
+            "description": "Clang: Sanitizer Configure Preset",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/clang-sanitizer",
+            "environment": {
+                "CXX": "clang++"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": {
+                    "type": "STRING",
+                    "value": "Debug"
+                },
+                "CMAKE_CXX_COMPILER": {
+                    "type": "STRING",
+                    "value": "clang++"
+                },
+                "CMAKE_LINKER_TYPE": {
+                    "type": "STRING",
+                    "value": "LLD"
+                },
+                "CMAKE_CXX_FLAGS": {
+                    "type": "STRING",
+                    "value": "-Wall -Wextra -Wpedantic -fno-omit-frame-pointer -stdlib=libc++ -fsanitize=address,undefined"
+                },
+                "CMAKE_EXE_LINKER_FLAGS": {
+                    "type": "STRING",
+                    "value": "-Wall -Wextra -Wpedantic -fno-omit-frame-pointer -stdlib=libc++ -fsanitize=address,undefined"
+                }
+            }
+        },
+        {
+            "name": "clang-release",
+            "displayName": "Clang: Release Config",
+            "description": "Clang: Release Config",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/clang-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": {
+                    "type": "STRING",
+                    "value": "Release"
+                },
+                "CMAKE_CXX_COMPILER": {
+                    "type": "STRING",
+                    "value": "clang++"
+                },
+                "CMAKE_LINKER_TYPE": {
+                    "type": "STRING",
+                    "value": "LLD"
+                },
+                "CMAKE_CXX_FLAGS": {
+                    "type": "STRING",
+                    "value": "-Wall -Wextra -Wpedantic -fno-omit-frame-pointer -stdlib=libc++ -static -flto=thin"
+                },
+                "CMAKE_EXE_LINKER_FLAGS": {
+                    "type": "STRING",
+                    "value": "-Wall -Wextra -Wpedantic -fno-omit-frame-pointer -stdlib=libc++ -static -flto=thin"
+                }
+            },
+            "environment": {
+                "CXX": "clang++"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "clang-sanitizer",
+            "configurePreset": "clang-sanitizer"
+        },
+        {
+            "name": "clang-release",
+            "configurePreset": "clang-release"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "clang-sanitizer",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-sanitizer"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-sanitizer"
+                }
+            ]
+        },
+        {
+            "name": "clang-release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-release"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-release"
+                }
+            ]
+        }
+    ]
+}
